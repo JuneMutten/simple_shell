@@ -43,6 +43,9 @@ char *_strncpy(char *dest, char *src, int n);
 int _strcmp(char *s1, char *s2);
 char *_strstr(char *haystack, char *needle);
 char *_strdup(const char *s);
+int sprt_psn(char *str, char *sprt);
+int deleted_chars(char *str, char *sprt);
+char **_strtok(char *str, const char *sprt);
 
 /* environment variable functions */
 int(builtin_funcs(char *cmd))(char **args, char **head);

@@ -223,3 +223,101 @@ char *_strdup(const char *s)
 	return (new_string);
 }
 
+/**
+ * sprt_psn - finds the position of a separator
+ * @str: input string
+ * @sprt: seperator
+ *
+ * Return: The seperator
+ */
+
+int sprt_psn(char *str, char *sprt)
+{
+	int len = 0;
+	int i;
+
+	for (i = 0; str[i] != *sprt; i++)
+	{
+		len++;
+	}
+	return (len);
+}
+
+/**
+ * deleted_chars - the number of deleted characters in
+ * a string
+ * @str: string input
+ * @sprt: seperator
+ *
+ * Return: Number of words after deletion
+ */
+
+int deleted_chars(char *str, char *sprt)
+{
+	int i;
+	int dltd = 0;
+	int len = 0;
+
+	for (i = 0; *(str + i); i++)
+		len++;
+
+	for (i = 0; i < len; I++)
+	{
+		if (*(str + i) != *sprt)
+		{
+			dltd++;
+			i += sprt_psn(str + i, sprt);
+		}
+	}
+	return (dltd);
+}
+
+/**
+ * _strtok - splits a string
+ * @str: string input
+ * @sprt: seperator
+ *
+ * Return: splited string
+ */
+
+char **_strtok(char *str, const char *sprt)
+{
+	char **string;
+	int i = 0;
+	int dltd, chrs, alpha, y;
+
+	dltd = deleted_chars(str, sprt);
+	if (dltd == 0)
+		return (NULL);
+
+	string = malloc(sizeof(char *) * (dltd + 2));
+	if (!string)
+		return (NULL);
+
+	for (chrs = 0; chrs < dltd; chrs++)
+	{
+		while (str[i] == *sprt)
+			i++;
+		alpha = sprt_psn(str + i, sprt);
+
+		string[chrs] = malloc(sizeof(char) * (alpha + 1));
+		if (!string[chrs])
+		{
+			for (i -= 1; i >= 0; i--)
+				free(string[i]);
+			free(string);
+			return (NULL);
+		}
+
+		for (y = 0; y < alpha; y++)
+		{
+			string[chrs][y] = str[i];
+				i++;
+		}
+		string[chrs][y] = '\0';
+	}
+	string[chrs] = NULL;
+	string[chrs + 1] = NULL;
+
+	return (string);
+}
