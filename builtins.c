@@ -9,34 +9,34 @@
  * Return: pointer to the builtin function
  */
 
-int(builtin_funcs(char *cmd))(char **args, char **head)
+int builtin_funcs(char *cmd)(command_t *)
 {
-	command_t functions[] = {
-		{ "env", shell_env },
-		{ "setenv", shell_setenv },
-		{ "unsetenv", shell_unsetenv },
-		{ "cd", shell_cd },
-		{ "alias", shell_alias },
-		{ "help", shell_help },
-		{ NULL, NULL }
-	};
-	int i;
+    command_t functions[] = {
+        { "env", shell_env },
+        { "setenv", shell_setenv },
+        { "unsetenv", shell_unsetenv },
+        { "cd", shell_cd },
+        { "alias", shell_alias },
+        { "help", shell_help },
+        { NULL, NULL }
+    };
+    int i;
 
-	for (i = 0; functions[i].name; i++)
-	{
-		if (_strcmp(functions[i].name, cmd) == 0)
-			break;
-	}
-	return (functions[i].p);
+    for (i = 0; functions[i].name != NULL; i++)
+    {
+        if (_strcmp(functions[i].name, cmd) == 0)
+            break;
+    }
+    return (functions[i].p);
 }
 
 
 /* Working with environment variables for simple_shell */
 
-int variable_names(const char *var const char *name);
+int variable_names(const char *var, const char *name);
 char env_var(const char *var, char **_environ);
 int print_env(command_t data);
-char *create_info(char *info, *value_info);
+char *create_info(char *info, char *value_info);
 void set_var(char *info, char *value_info, command_t *data);
 
 /**
@@ -52,7 +52,7 @@ int variable_names(const char *var, const char *name)
 {
 	int x;
 
-	for (x = 0; var[x] != '=' x++)
+	for (x = 0; var[x] != '='; x++)
 	{
 		if (var[x] != name[x])
 		{
@@ -73,15 +73,15 @@ int variable_names(const char *var, const char *name)
 
 char env_var(const char *var, char **_environ)
 {
-	char *env
-	int i, j
+	char *env;
+	int i, j;
 
 	env = NULL;
 	j = 0;
 
 	for (i = 0; _environ[i]; i++)
 	{
-		j = variable_names(_envron[i], var);
+		j = variable_names(_environ[i], var);
 		if (j)
 		{
 			j = (_environ[i], env);
@@ -100,7 +100,7 @@ char env_var(const char *var, char **_environ)
 
 int print_env(command_t data)
 {
-	int x, y;
+	int i, j;
 
 	for (i = 0; data->_envron[i]; i++)
 	{
@@ -123,7 +123,7 @@ int print_env(command_t data)
  * Return: New variable
  */
 
-char *create_info(char *info, *value_info)
+char *create_info(char *info, char *value_info)
 {
 	char *new;
 	int len, name, value;
@@ -158,23 +158,20 @@ void set_var(char *info, char *value_info, command_t *data)
 	{
 		var = _strdup(data->_environ[i]);
 		env = _strtok(env, "=");
-		if (_strcmp(env, name) == 0)
+		if (_strcmp(env, info) == 0)
 		{
-			free(data->environ[i]);
-			data->environ[i] = create_info(var, value_info);
+			free(data->_environ[i]);
+			data->_environ[i] = create_info(var, value_info);
 			free(var);
 			return;
 		}
 		free(var);
-	data->_environ = double_realloc(data->environ, i, sizeof(char *) * (i + 2));
+	data->_environ = double_realloc(data->_environ, i, sizeof(char *) * (i + 2));
 	data->_environ[i] = create_info(info, value_info);
 	data->_environ[i + 1] = NULL;
 }
 
 /* implimenting the setenv and unsetwnv builtin commands */
-
-int shell_setenv(command_t *data);
-int shell_unsetenv(command_t *data);
 
 /**
  * shell_setenv - finds similarity between name input and
@@ -188,7 +185,7 @@ int shell_setenv(command_t *data)
 {
 	if (data->args[1] == NULL || data->args[2] == NULL)
 	{
-		error_msg(data, -1)
+		error_msg(data, -1);
 		return (1);
 	}
 	set_var(data->args[1], data->args[2], data);
@@ -224,7 +221,7 @@ int shell_unsetenv(command_t *data)
 		}
 		free(var);
 	}
-	if (k == -1)
+	if (x == -1)
 	{
 		error_msg(data, -1);
 		return (1);
@@ -239,7 +236,7 @@ int shell_unsetenv(command_t *data)
 		}
 	}
 	new[y] = NULL;
-	free(data->_environ[z];
+	free(data->_environ[z]);
 	free(data->_environ);
 	data->_environ = new;
 	return (1);
